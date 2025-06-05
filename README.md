@@ -1,13 +1,13 @@
 # RAG Chatbot
 
-Google Gemini APIを使用したRAG（Retrieval-Augmented Generation）ベースのチャットボットです。PDFやMarkdownファイルを読み込み、質問応答システムを構築します。
+Google Gemini APIを使用したRetrieval-Augmented Generation (RAG) ベースのチャットボットです。PDFやMarkdownファイルを読み込み、それらの内容に基づいて質問に答えることができます。
 
 ## 機能
 
-- PDF/Markdownドキュメントの読み込みとチャンク化
-- Gemini APIを使用したテキストの埋め込み生成
+- ドキュメントの読み込み（PDF、Markdown）
+- テキストの埋め込み生成
 - ChromaDBを使用したベクトルストアの実装
-- 質問応答システムの実装
+- 質問応答システム
 - CLIインターフェース
 - Dockerコンテナ化
 - CI/CDパイプライン
@@ -20,81 +20,73 @@ Google Gemini APIを使用したRAG（Retrieval-Augmented Generation）ベース
 
 ## セットアップ
 
-### 1. 環境変数の設定
+1. 環境変数の設定
+   ```sh
+   cp .env.example .env
+   # .envファイルを編集してGOOGLE_API_KEYを設定
+   ```
 
-```bash
-cp .env.example .env
-# .envファイルを編集して必要なAPIキーを設定
-```
+2. 仮想環境の作成と依存関係のインストール
+   ```sh
+   python -m venv venv
+   source venv/bin/activate  # Windows: venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
 
-### 2. 仮想環境の作成と依存パッケージのインストール
+3. アプリケーションの起動
+   ```sh
+   python cli/chat.py
+   ```
 
-```bash
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-```
+## Dockerを使用する場合
 
-### 3. アプリケーションの起動
-
-```bash
-python cli/chat.py
-```
-
-### 4. Dockerを使用する場合
-
-```bash
-# イメージのビルドと起動
-docker-compose -f docker/docker-compose.yml up --build
+```sh
+docker-compose up
 ```
 
 ## プロジェクト構造
 
 ```
 .
-├── app/
-│   ├── loaders/      # ドキュメントローダー
-│   ├── splitters/    # テキスト分割ロジック
-│   ├── embedders/    # 埋め込み生成
-│   ├── retrievers/   # ベクトル検索
-│   └── generators/   # 回答生成
-├── cli/             # コマンドラインインターフェース
-├── docs/            # サンプルドキュメント
-├── tests/           # テストコード
-└── docker/          # Docker関連ファイル
+├── app/                    # アプリケーションコード
+│   ├── embedders/         # テキスト埋め込み生成
+│   ├── generators/        # 回答生成
+│   ├── loaders/          # ドキュメント読み込み
+│   ├── retrievers/       # 文書検索
+│   └── splitters/        # テキスト分割
+├── cli/                   # コマンドラインインターフェース
+├── docs/                  # ドキュメント
+├── tests/                 # テスト
+└── docker/               # Docker設定
 ```
 
 ## 開発
 
 ### テストの実行
 
-```bash
+```sh
 pytest
 ```
 
 ### コードフォーマット
 
-```bash
-# コードの整形
+```sh
 black .
 isort .
-
-# リンターの実行
-flake8
 ```
 
 ### テストカバレッジ
 
-```bash
-pytest --cov=app --cov-report=term-missing
+```sh
+pytest --cov=app tests/
 ```
 
 ## CI/CD
 
-GitHub Actionsを使用して以下のCI/CDパイプラインを実装しています：
+GitHub Actionsを使用して以下の処理を自動化しています：
 
-- コードの品質チェック（flake8, isort, black）
-- テストの実行とカバレッジレポートの生成
+- コード品質チェック
+- テスト実行
 - Dockerイメージのビルドとプッシュ
 
 ## ライセンス
@@ -104,21 +96,16 @@ MIT
 ## 貢献
 
 1. このリポジトリをフォーク
-2. 新しいブランチを作成（`git checkout -b feature/amazing-feature`）
-3. 変更をコミット（`git commit -m 'Add some amazing feature'`）
-4. ブランチにプッシュ（`git push origin feature/amazing-feature`）
+2. 新しいブランチを作成 (`git checkout -b feature/amazing-feature`)
+3. 変更をコミット (`git commit -m 'Add some amazing feature'`)
+4. ブランチにプッシュ (`git push origin feature/amazing-feature`)
 5. プルリクエストを作成
 
-## 時間見積もり
+## 実装時間
 
-各フェーズの実装に要した時間：
-
-- フェーズ0: プロジェクト初期化 - 1時間
-- フェーズ1: データロードとチャンク化 - 2時間
-- フェーズ2: 埋め込み生成と保存 - 2時間
-- フェーズ3: 質問→検索→回答 - 2時間
-- フェーズ4: 統合とCLI - 1時間
-- フェーズ5: コンテナ＆CI - 1時間
-- フェーズ6: ドキュメント - 1時間
-
-合計: 10時間 
+- Phase 1: 基本構造の実装 (2時間)
+- Phase 2: ドキュメント処理の実装 (2時間)
+- Phase 3: 検索と生成の実装 (3時間)
+- Phase 4: CLIインターフェースの実装 (2時間)
+- Phase 5: コンテナ化とCIの実装 (1時間)
+- 合計: 10時間

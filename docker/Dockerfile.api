@@ -1,0 +1,29 @@
+# Python 3.11をベースイメージとして使用
+FROM python:3.11-slim
+
+# 作業ディレクトリを設定
+WORKDIR /app
+
+# 必要なパッケージをインストール
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# 依存関係ファイルをコピー
+COPY requirements.txt .
+
+# 依存パッケージをインストール
+RUN pip install --no-cache-dir -r requirements.txt
+
+# アプリケーションコードをコピー
+COPY . .
+
+# 環境変数を設定
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
+
+# ポートを公開
+EXPOSE 8000
+
+# アプリケーションを実行
+CMD ["python", "cli/chat.py"] 

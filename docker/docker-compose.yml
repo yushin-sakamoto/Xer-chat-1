@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.api
+    volumes:
+      - ../docs:/app/docs
+      - ../.chroma:/app/.chroma
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - chroma
+
+  chroma:
+    image: chromadb/chroma:latest
+    volumes:
+      - ../.chroma:/chroma/chroma
+    environment:
+      - ALLOW_RESET=true
+      - ANONYMIZED_TELEMETRY=false
+    ports:
+      - "8001:8000" 
